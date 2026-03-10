@@ -145,6 +145,17 @@
       color: var(--rust);
     }
 
+    .hero-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-top: 16px;
+      margin-bottom: 0;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.7s forwards;
+    }
+
     .hero-descriptor {
       margin-top: 32px;
       max-width: 480px;
@@ -555,8 +566,8 @@
   <nav>
     <a href="#" class="nav-logo">hyasmo</a>
     <ul class="nav-links">
-      <li><a href="#work">Work</a></li>
       <li><a href="#id-sample">Teaching</a></li>
+      <li><a href="#work">Work</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -564,90 +575,15 @@
 
   <!-- HERO -->
   <section class="hero">
-    <p class="hero-eyebrow">Portfolio — 2025</p>
+    <p class="hero-eyebrow">Portfolio — 2026</p>
     <h1 class="hero-name">Hana<br><em>Morsi</em></h1>
+    <p class="hero-title">Learning Ops + AI Implementation Specialist</p>
     <p class="hero-descriptor">
       Interdisciplinary designer and maker working at the intersection of 
       instructional design, interactive systems, and cultural narrative. 
       Studio: hyasmo.
     </p>
     <div class="hero-scroll">Scroll</div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- WORK -->
-  <section id="work">
-    <p class="section-label">Selected Work</p>
-
-    <div class="projects-grid">
-
-      <!-- Project 01 -->
-      <div class="project-item reveal">
-        <div class="project-number">01</div>
-        <div class="project-content">
-          <div class="project-tags">
-            <span class="tag highlight">Interactive Installation</span>
-            <span class="tag">Cultural Design</span>
-            <span class="tag">XR</span>
-          </div>
-          <h2 class="project-title"><em>Layered</em> Identities</h2>
-          <p class="project-desc">
-            An interactive map of Portugal surfacing the lived experiences of immigrant communities 
-            through contemporary traditional dress. Users select a region to reveal clothing 
-            specific to each diaspora — projected in real-time onto a 3D figure, with the option 
-            to blend Portuguese cultural influence. A meditation on belonging, visibility, and hybrid identity.
-          </p>
-          <p class="project-tech">Unity · TouchDesigner · Video Mapping · 3D Figure · 10 Communities · 300–400 Images</p>
-        </div>
-        <div class="project-status">
-          <span class="status-pill in-progress">In Progress</span>
-        </div>
-      </div>
-
-      <!-- Project 02 -->
-      <div class="project-item reveal">
-        <div class="project-number">02</div>
-        <div class="project-content">
-          <div class="project-tags">
-            <span class="tag highlight">UX Design</span>
-            <span class="tag">Editorial</span>
-            <span class="tag">Writing</span>
-          </div>
-          <h2 class="project-title">Can UX Be <em>Poetic?</em></h2>
-          <p class="project-desc">
-            A design exploration asking whether user experience can carry emotional resonance 
-            without sacrificing clarity. An editorial web page built as both argument and artifact — 
-            the design itself enacts the thesis. Sage and linen tones, literary typography, 
-            grain overlays, and a particle system that responds to reading pace.
-          </p>
-          <p class="project-tech">HTML · CSS · JS · Cormorant Garamond · DM Mono · Grain Overlay · Custom Cursor</p>
-        </div>
-        <div class="project-status">
-          <span class="status-pill concept">Concept</span>
-        </div>
-      </div>
-
-      <!-- Project 03 — Placeholder -->
-      <div class="project-item reveal">
-        <div class="project-number">03</div>
-        <div class="project-content">
-          <div class="project-tags">
-            <span class="tag">Coming Soon</span>
-          </div>
-          <h2 class="project-title" style="color: var(--sand);">Color Theory <em>App</em></h2>
-          <p class="project-desc" style="color: var(--sand);">
-            Details pending — an interactive tool exploring color relationships, 
-            theory, and learning. To be updated.
-          </p>
-          <p class="project-tech" style="color: var(--paper-dark);">Stack TBD</p>
-        </div>
-        <div class="project-status">
-          <span class="status-pill placeholder">Placeholder</span>
-        </div>
-      </div>
-
-    </div>
   </section>
 
   <div class="divider"></div>
@@ -725,32 +661,115 @@
     </div>
   </section>
 
+  <div class="divider"></div>
+
+  <!-- WORK -->
+  <section id="work">
+    <p class="section-label">Selected Work</p>
+
+    <div class="projects-grid">
+
+      <!-- Project 01 -->
+      <div class="project-item reveal">
+        <div class="project-number">01</div>
+        <div class="project-content">
+          <div class="project-tags">
+            <span class="tag highlight">Interactive Installation</span>
+            <span class="tag">Cultural Design</span>
+            <span class="tag">XR</span>
+          </div>
+          <h2 class="project-title"><em>Layered</em> Identities</h2>
+          <p class="project-desc">
+            An interactive map of Portugal surfacing the lived experiences of immigrant communities 
+            through contemporary traditional dress. Users select a region to reveal clothing 
+            specific to each diaspora — projected in real-time onto a 3D figure, with the option 
+            to blend Portuguese cultural influence. A meditation on belonging, visibility, and hybrid identity.
+          </p>
+          <p class="project-tech">Unity · TouchDesigner · Video Mapping · 3D Figure · 10 Communities · 300–400 Images</p>
+        </div>
+        <div class="project-status">
+          <span class="status-pill in-progress">In Progress</span>
+        </div>
+      </div>
+
+      <!-- Project 02 -->
+      <div class="project-item reveal">
+        <div class="project-number">02</div>
+        <div class="project-content">
+          <div class="project-tags">
+            <span class="tag highlight">UX Design</span>
+            <span class="tag">Editorial</span>
+            <span class="tag">Writing</span>
+          </div>
+          <h2 class="project-title">Can UX Be <em>Poetic?</em></h2>
+          <p class="project-desc">
+            A design exploration asking whether user experience can carry emotional resonance 
+            without sacrificing clarity. An editorial web page built as both argument and artifact — 
+            the design itself enacts the thesis. Sage and linen tones, literary typography, 
+            grain overlays, and a particle system that responds to reading pace.
+          </p>
+          <p class="project-tech">HTML · CSS · JS · Cormorant Garamond · DM Mono · Grain Overlay · Custom Cursor</p>
+        </div>
+        <div class="project-status">
+          <span class="status-pill concept">Concept</span>
+        </div>
+      </div>
+
+      <!-- Project 03 — Placeholder -->
+      <div class="project-item reveal">
+        <div class="project-number">03</div>
+        <div class="project-content">
+          <div class="project-tags">
+            <span class="tag">Coming Soon</span>
+          </div>
+          <h2 class="project-title">Color Theory <em>App</em></h2>
+          <p class="project-desc">
+            An interactive tool exploring color relationships, theory, and learning. 
+            Currently in development.
+          </p>
+          <p class="project-tech">Stack TBD</p>
+        </div>
+        <div class="project-status">
+          <span class="status-pill in-progress">In Progress</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- ABOUT -->
   <section id="about">
     <p class="section-label">About</p>
     <div class="about-grid">
       <div class="reveal">
         <p class="about-text">
-          Work that lives at the edge of <em>systems</em> and <em>story</em> — 
-          where learning design meets cultural inquiry, and interfaces carry meaning.
+          Eight years at the intersection of <em>teaching</em>, <em>technology</em>, and <em>systems</em> — from Title-1 classrooms to enterprise AI programs. Currently: Master's in AI + Creative Computing, IADE University.
         </p>
       </div>
       <div class="about-details reveal">
         <p>
-          Hana Morsi is a designer and researcher working across instructional design, 
-          interactive media, and cultural narrative. Under the studio name hyasmo, she builds 
-          projects that resist easy categorization — tools that teach, installations that ask 
-          questions, and interfaces that feel like writing.
+          Hana Morsi is a Learning Ops and AI Implementation Specialist with 8+ years leading 
+          technical programs in education and enterprise contexts. She has taught Computer Science, 
+          AI, Cybersecurity, and Web Development at the K–12 level — including three years as 
+          Technical Program Coordinator in a Title-1 district — and currently delivers virtual 
+          CS and Engineering instruction nationally through Elevate K-12.
         </p>
         <p>
-          Current focus: participatory systems, immigrant visibility, and the poetics of UX.
+          On the industry side, she consults on AI instructional projects, builds SCORM-compliant 
+          modules in Articulate 360, and manages LMS integration for enterprise clients. 
+          Currently completing a Master's in AI + Creative Computing at IADE University (2026–27), 
+          with a focus on ethical AI adoption and human-centered implementation.
+        </p>
+        <p>
+          Under the studio name hyasmo, she makes work that sits at the edge of systems and story — 
+          tools that teach, installations that ask questions, and interfaces that carry meaning.
         </p>
         <ul class="about-list">
-          <li>Instructional Design <span>—</span></li>
+          <li>AI Implementation + Workflows <span>—</span></li>
+          <li>Instructional Design + LMS <span>—</span></li>
+          <li>K–12 + Enterprise L&D <span>—</span></li>
+          <li>Articulate 360 + Storyline <span>—</span></li>
           <li>Interactive Installation <span>—</span></li>
-          <li>Editorial UX <span>—</span></li>
-          <li>Cultural Research <span>—</span></li>
-          <li>Writing <span>—</span></li>
         </ul>
       </div>
     </div>
@@ -761,8 +780,10 @@
   <!-- FOOTER -->
   <footer id="contact">
     <div class="footer-logo">hyasmo</div>
-    <div class="footer-contact">hana morsi · available for collaboration</div>
-    <div class="footer-year">© 2025</div>
+    <div class="footer-contact">
+      hana morsi · <a href="mailto:hanayasmine.m@gmail.com" style="color: var(--ink-muted); text-decoration: none; border-bottom: 1px solid var(--sand);">hanayasmine.m@gmail.com</a>
+    </div>
+    <div class="footer-year">© 2026</div>
   </footer>
 
   <script>
