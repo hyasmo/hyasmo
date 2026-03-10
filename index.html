@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>hyasmo — Hana Morsi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rust: #3D6B4F;
+      --rust-light: #5A8C6E;
+      --paper: #F4F7F2;
+      --paper-dark: #E4EDE3;
+      --ink: #141C14;
+      --ink-mid: #2A3B2A;
+      --ink-muted: #5C7060;
+      --sand: #B8CDB8;
+      --accent: #5A8C6E;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      font-weight: 300;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* CUSTOM CURSOR */
+    .cursor {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--rust);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease;
+      mix-blend-mode: multiply;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--rust);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.4s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+      opacity: 0.5;
+    }
+    body:hover .cursor { opacity: 1; }
+
+    /* GRAIN */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9000;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 48px;
+      mix-blend-mode: multiply;
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      text-transform: lowercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--rust); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 48px 80px;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.3s forwards;
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 10vw, 9rem);
+      font-weight: 300;
+      line-height: 0.9;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+
+    .hero-name em {
+      font-style: italic;
+      color: var(--rust);
+    }
+
+    .hero-descriptor {
+      margin-top: 32px;
+      max-width: 480px;
+      font-size: 0.72rem;
+      line-height: 1.9;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.8s forwards;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 80px;
+      right: 48px;
+      writing-mode: vertical-rl;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--sand);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeIn 1s ease 1.5s forwards;
+    }
+
+    .hero-scroll::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 60px;
+      background: var(--sand);
+      animation: lineGrow 1.2s ease 1.8s both;
+      transform-origin: top;
+    }
+
+    /* DIVIDER */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--sand);
+      margin: 0 48px;
+      width: calc(100% - 96px);
+    }
+
+    /* SECTION */
+    section {
+      padding: 100px 48px;
+    }
+
+    .section-label {
+      font-size: 0.55rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 60px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--sand);
+      max-width: 120px;
+    }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+
+    .project-item {
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      align-items: start;
+      gap: 40px;
+      padding: 48px 0;
+      border-bottom: 1px solid var(--sand);
+      cursor: none;
+      transition: background 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-item::before {
+      content: '';
+      position: absolute;
+      left: -100%;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      background: var(--paper-dark);
+      transition: left 0.4s ease;
+      z-index: 0;
+    }
+
+    .project-item:hover::before { left: 0; }
+    .project-item > * { position: relative; z-index: 1; }
+
+    .project-number {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--sand);
+      padding-top: 6px;
+    }
+
+    .project-content {}
+
+    .project-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .tag {
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      border: 1px solid var(--sand);
+      padding: 3px 10px;
+      border-radius: 0;
+    }
+
+    .tag.highlight {
+      border-color: var(--rust);
+      color: var(--rust);
+    }
+
+    .project-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    .project-title em { font-style: italic; color: var(--rust-light); }
+
+    .project-desc {
+      font-size: 0.68rem;
+      line-height: 1.85;
+      color: var(--ink-muted);
+      max-width: 560px;
+      letter-spacing: 0.03em;
+    }
+
+    .project-tech {
+      margin-top: 20px;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      color: var(--sand);
+    }
+
+    .project-status {
+      text-align: right;
+      padding-top: 6px;
+    }
+
+    .status-pill {
+      display: inline-block;
+      font-size: 0.5rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border: 1px solid currentColor;
+    }
+
+    .status-pill.in-progress { color: var(--rust); }
+    .status-pill.concept { color: var(--ink-muted); }
+    .status-pill.placeholder { color: var(--sand); border-style: dashed; }
+
+    /* INSTRUCTIONAL DESIGN */
+    .course-card {
+      border: 1px solid var(--sand);
+      padding: 48px;
+      background: linear-gradient(135deg, var(--paper) 0%, var(--paper-dark) 100%);
+    }
+
+    .course-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .course-subtitle {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      margin-top: -8px;
+      margin-bottom: 0;
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-bottom: 40px;
+    }
+
+    .module-block {
+      background: var(--paper);
+      padding: 28px 24px;
+      border: 1px solid var(--sand);
+      display: flex;
+      gap: 16px;
+    }
+
+    .module-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--sand);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .module-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .module-desc {
+      font-size: 0.63rem;
+      line-height: 1.8;
+      color: var(--ink-muted);
+      letter-spacing: 0.02em;
+      margin-bottom: 12px;
+    }
+
+    .module-meta {
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      color: var(--rust);
+      text-transform: uppercase;
+    }
+
+    .course-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 28px;
+      border-top: 1px solid var(--sand);
+    }
+
+    .course-tags-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .fw-tag {
+      font-size: 0.5rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      background: var(--paper-dark);
+      padding: 3px 10px;
+    }
+
+    .download-hint {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--rust);
+    }
+
+    @media (max-width: 768px) {
+      .modules-grid { grid-template-columns: 1fr; }
+      .course-card { padding: 28px 20px; }
+      .course-footer { flex-direction: column; gap: 16px; align-items: flex-start; }
+      .course-card-header { flex-direction: column; gap: 16px; }
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .about-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--ink);
+    }
+
+    .about-text em { font-style: italic; color: var(--rust); }
+
+    .about-details {
+      padding-top: 8px;
+    }
+
+    .about-details p {
+      font-size: 0.68rem;
+      line-height: 1.9;
+      color: var(--ink-muted);
+      letter-spacing: 0.03em;
+      margin-bottom: 24px;
+    }
+
+    .about-list {
+      list-style: none;
+      margin-top: 32px;
+    }
+
+    .about-list li {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--paper-dark);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .about-list li span { color: var(--rust); }
+
+    /* FOOTER */
+    footer {
+      padding: 60px 48px;
+      border-top: 1px solid var(--sand);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      color: var(--ink-muted);
+    }
+
+    .footer-contact {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .footer-year {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--sand);
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes lineGrow {
+      from { transform: scaleY(0); }
+      to   { transform: scaleY(1); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .hero { padding: 0 24px 60px; }
+      section { padding: 60px 24px; }
+      .project-item { grid-template-columns: 1fr; gap: 16px; }
+      .project-number { display: none; }
+      .project-status { text-align: left; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      footer { flex-direction: column; gap: 20px; text-align: center; }
+      .divider { margin: 0 24px; width: calc(100% - 48px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="#" class="nav-logo">hyasmo</a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#id-sample">Teaching</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-eyebrow">Portfolio — 2025</p>
+    <h1 class="hero-name">Hana<br><em>Morsi</em></h1>
+    <p class="hero-descriptor">
+      Interdisciplinary designer and maker working at the intersection of 
+      instructional design, interactive systems, and cultural narrative. 
+      Studio: hyasmo.
+    </p>
+    <div class="hero-scroll">Scroll</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- WORK -->
+  <section id="work">
+    <p class="section-label">Selected Work</p>
+
+    <div class="projects-grid">
+
+      <!-- Project 01 -->
+      <div class="project-item reveal">
+        <div class="project-number">01</div>
+        <div class="project-content">
+          <div class="project-tags">
+            <span class="tag highlight">Interactive Installation</span>
+            <span class="tag">Cultural Design</span>
+            <span class="tag">XR</span>
+          </div>
+          <h2 class="project-title"><em>Layered</em> Identities</h2>
+          <p class="project-desc">
+            An interactive map of Portugal surfacing the lived experiences of immigrant communities 
+            through contemporary traditional dress. Users select a region to reveal clothing 
+            specific to each diaspora — projected in real-time onto a 3D figure, with the option 
+            to blend Portuguese cultural influence. A meditation on belonging, visibility, and hybrid identity.
+          </p>
+          <p class="project-tech">Unity · TouchDesigner · Video Mapping · 3D Figure · 10 Communities · 300–400 Images</p>
+        </div>
+        <div class="project-status">
+          <span class="status-pill in-progress">In Progress</span>
+        </div>
+      </div>
+
+      <!-- Project 02 -->
+      <div class="project-item reveal">
+        <div class="project-number">02</div>
+        <div class="project-content">
+          <div class="project-tags">
+            <span class="tag highlight">UX Design</span>
+            <span class="tag">Editorial</span>
+            <span class="tag">Writing</span>
+          </div>
+          <h2 class="project-title">Can UX Be <em>Poetic?</em></h2>
+          <p class="project-desc">
+            A design exploration asking whether user experience can carry emotional resonance 
+            without sacrificing clarity. An editorial web page built as both argument and artifact — 
+            the design itself enacts the thesis. Sage and linen tones, literary typography, 
+            grain overlays, and a particle system that responds to reading pace.
+          </p>
+          <p class="project-tech">HTML · CSS · JS · Cormorant Garamond · DM Mono · Grain Overlay · Custom Cursor</p>
+        </div>
+        <div class="project-status">
+          <span class="status-pill concept">Concept</span>
+        </div>
+      </div>
+
+      <!-- Project 03 — Placeholder -->
+      <div class="project-item reveal">
+        <div class="project-number">03</div>
+        <div class="project-content">
+          <div class="project-tags">
+            <span class="tag">Coming Soon</span>
+          </div>
+          <h2 class="project-title" style="color: var(--sand);">Color Theory <em>App</em></h2>
+          <p class="project-desc" style="color: var(--sand);">
+            Details pending — an interactive tool exploring color relationships, 
+            theory, and learning. To be updated.
+          </p>
+          <p class="project-tech" style="color: var(--paper-dark);">Stack TBD</p>
+        </div>
+        <div class="project-status">
+          <span class="status-pill placeholder">Placeholder</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- INSTRUCTIONAL DESIGN -->
+  <section id="id-sample">
+    <p class="section-label">Instructional Design</p>
+
+    <div class="id-intro reveal">
+      <p class="about-text" style="max-width: 680px; margin-bottom: 48px;">
+        A sample micro-course outline demonstrating <em>curriculum architecture</em>, learning design, and pedagogical framework — built for K–12 educators navigating AI in the classroom.
+      </p>
+    </div>
+
+    <div class="course-card reveal">
+      <div class="course-card-header">
+        <div>
+          <div class="project-tags" style="margin-bottom: 14px;">
+            <span class="tag highlight">Instructional Design</span>
+            <span class="tag">K–12 Education</span>
+            <span class="tag">AI Literacy</span>
+            <span class="tag">Curriculum</span>
+          </div>
+          <h2 class="project-title">Teaching with <em>AI</em></h2>
+          <p class="course-subtitle">A Micro-Course for K–12 Educators</p>
+        </div>
+        <div class="project-status" style="padding-top: 6px;">
+          <span class="status-pill concept">Sample</span>
+        </div>
+      </div>
+
+      <p class="project-desc" style="margin-bottom: 32px;">
+        Three-module micro-course (4–6 hours, 0.5 CEU) asking: what does it mean to teach well in an age of AI? 
+        Built on constructivist and critical pedagogy foundations, each module follows an orient → explore → apply → reflect arc 
+        and ends with a practical classroom deliverable.
+      </p>
+
+      <div class="modules-grid">
+        <div class="module-block">
+          <div class="module-number">01</div>
+          <div class="module-body">
+            <h3 class="module-title">AI Tool Literacy</h3>
+            <p class="module-desc">A functional, honest mental model of how AI works — and the tools already in students' hands. Culminates in a personal AI Landscape Map.</p>
+            <div class="module-meta">3 lessons · ~90 min · Video + Guided Exploration</div>
+          </div>
+        </div>
+        <div class="module-block">
+          <div class="module-number">02</div>
+          <div class="module-body">
+            <h3 class="module-title">AI Ethics in Education</h3>
+            <p class="module-desc">Frameworks for academic integrity, algorithmic bias, and student data privacy. Culminates in a draft Classroom AI Policy.</p>
+            <div class="module-meta">3 lessons · ~100 min · Case Studies + Scenario Practice</div>
+          </div>
+        </div>
+        <div class="module-block">
+          <div class="module-number">03</div>
+          <div class="module-body">
+            <h3 class="module-title">Pedagogy First</h3>
+            <p class="module-desc">The HEART framework for AI-resilient assignment design. Positions AI as a thinking partner, not a shortcut. Culminates in one redesigned lesson.</p>
+            <div class="module-meta">3 lessons · ~110 min · Design Studio + Peer Review</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-footer">
+        <div class="course-tags-row">
+          <span class="fw-tag">Constructivism</span>
+          <span class="fw-tag">Critical Pedagogy</span>
+          <span class="fw-tag">UDL</span>
+          <span class="fw-tag">TPACK</span>
+          <span class="fw-tag">Algorithmic Justice</span>
+        </div>
+        <p class="download-hint">↓ Full outline available on request</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <p class="section-label">About</p>
+    <div class="about-grid">
+      <div class="reveal">
+        <p class="about-text">
+          Work that lives at the edge of <em>systems</em> and <em>story</em> — 
+          where learning design meets cultural inquiry, and interfaces carry meaning.
+        </p>
+      </div>
+      <div class="about-details reveal">
+        <p>
+          Hana Morsi is a designer and researcher working across instructional design, 
+          interactive media, and cultural narrative. Under the studio name hyasmo, she builds 
+          projects that resist easy categorization — tools that teach, installations that ask 
+          questions, and interfaces that feel like writing.
+        </p>
+        <p>
+          Current focus: participatory systems, immigrant visibility, and the poetics of UX.
+        </p>
+        <ul class="about-list">
+          <li>Instructional Design <span>—</span></li>
+          <li>Interactive Installation <span>—</span></li>
+          <li>Editorial UX <span>—</span></li>
+          <li>Cultural Research <span>—</span></li>
+          <li>Writing <span>—</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-logo">hyasmo</div>
+    <div class="footer-contact">hana morsi · available for collaboration</div>
+    <div class="footer-year">© 2025</div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursor.style.left = mouseX + 'px';
+      cursor.style.top  = mouseY + 'px';
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      ring.style.left = ringX + 'px';
+      ring.style.top  = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, .project-item').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '18px';
+        cursor.style.height = '18px';
+        ring.style.width = '54px';
+        ring.style.height = '54px';
+        ring.style.opacity = '0.3';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '10px';
+        cursor.style.height = '10px';
+        ring.style.width = '36px';
+        ring.style.height = '36px';
+        ring.style.opacity = '0.5';
+      });
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 100);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
