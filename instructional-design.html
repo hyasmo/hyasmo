@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instructional Design — hyasmo</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzNENkI0RiIvPgogIDx0ZXh0IHg9IjQiIHk9IjIyIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIj5oPC90ZXh0PgogIDx0ZXh0IHg9IjE4IiB5PSIxNCIgZm9udC1mYW1pbHk9InNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjQjhDREI4Ij7imIU8L3RleHQ+Cjwvc3ZnPg=="/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #3D6B4F; --green-light: #5A8C6E; --green-pale: #E4EDE3;
+      --lavender: #9B8EC4; --lavender-light: #B8AED8; --lavender-pale: #EDE9F8;
+      --paper: #F4F7F2; --paper-dark: #E4EDE3;
+      --ink: #141C14; --ink-muted: #5C7060; --sand: #B8CDB8; --white: #FFFFFF;
+    }
+    body { background: var(--paper); color: var(--ink); font-family: 'DM Mono', monospace; font-weight: 300; cursor: none; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9000; opacity: 0.35; }
+    .cursor { position: fixed; width: 10px; height: 10px; background: var(--lavender); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s; mix-blend-mode: multiply; }
+    .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--lavender-light); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s; opacity: 0.5; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 24px 64px; background: var(--paper); border-bottom: 1px solid var(--green-pale); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 300; font-style: italic; letter-spacing: 0.15em; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--lavender); }
+    .nav-links a.active { color: var(--lavender); border-bottom: 1px solid var(--lavender); padding-bottom: 2px; }
+    .page { padding-top: 80px; }
+    .section { padding: 72px 64px; border-bottom: 1px solid var(--green-pale); }
+    .section-label { font-size: 0.5rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--lavender); margin-bottom: 48px; display: flex; align-items: center; gap: 16px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--sand); max-width: 80px; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* HERO */
+    .hero { padding: 80px 64px 64px; border-bottom: 1px solid var(--green-pale); }
+    .hero-eyebrow { font-size: 0.5rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--lavender); margin-bottom: 20px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 300; line-height: 1.05; color: var(--ink); margin-bottom: 28px; }
+    .hero-title em { font-style: italic; color: var(--lavender); }
+    .hero-statement {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+      font-weight: 300; font-style: italic;
+      line-height: 1.6; color: var(--ink-muted);
+      max-width: 700px;
+      padding: 32px; border-left: 3px solid var(--lavender);
+      background: var(--lavender-pale);
+    }
+
+    /* PHILOSOPHY */
+    .philosophy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+    .phil-block { padding: 36px 32px; }
+    .phil-block:nth-child(odd) { background: var(--paper-dark); }
+    .phil-label { font-size: 0.48rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--lavender); margin-bottom: 14px; }
+    .phil-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; color: var(--ink); margin-bottom: 12px; line-height: 1.3; }
+    .phil-title em { font-style: italic; color: var(--green); }
+    .phil-body { font-size: 0.65rem; line-height: 1.85; color: var(--ink-muted); }
+
+    /* MODELS */
+    .models-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .model-block { padding: 28px 24px; border: 1px solid var(--green-pale); }
+    .model-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; color: var(--ink); margin-bottom: 6px; }
+    .model-name em { font-style: italic; color: var(--lavender); }
+    .model-full { font-size: 0.5rem; letter-spacing: 0.1em; color: var(--lavender); text-transform: uppercase; margin-bottom: 12px; }
+    .model-desc { font-size: 0.62rem; line-height: 1.75; color: var(--ink-muted); }
+
+    /* SAMPLES */
+    .samples-grid { display: flex; flex-direction: column; gap: 2px; }
+    .sample-item {
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 32px; align-items: center;
+      padding: 32px; border: 1px solid var(--green-pale);
+      text-decoration: none;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .sample-item:hover { background: var(--paper-dark); border-color: var(--lavender); }
+    .sample-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .tag { display: inline-block; font-size: 0.48rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-muted); border: 1px solid var(--sand); padding: 2px 8px; }
+    .tag.highlight { border-color: var(--lavender); color: var(--lavender); }
+    .sample-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; color: var(--ink); margin-bottom: 8px; }
+    .sample-title em { font-style: italic; color: var(--lavender); }
+    .sample-desc { font-size: 0.62rem; line-height: 1.8; color: var(--ink-muted); }
+    .sample-meta { font-size: 0.52rem; letter-spacing: 0.08em; color: var(--sand); margin-top: 10px; }
+    .sample-arrow { font-size: 1rem; color: var(--lavender); }
+
+    footer { padding: 36px 64px; border-top: 1px solid var(--green-pale); display: flex; justify-content: space-between; align-items: center; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-style: italic; color: var(--ink-muted); letter-spacing: 0.15em; }
+    .footer-contact { font-size: 0.55rem; color: var(--ink-muted); }
+    .footer-contact a { color: var(--ink-muted); text-decoration: none; border-bottom: 1px solid var(--sand); }
+    .footer-year { font-size: 0.55rem; letter-spacing: 0.15em; color: var(--sand); }
+
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .hero, .section { padding: 48px 24px; }
+      .philosophy-grid, .models-grid { grid-template-columns: 1fr; }
+      .sample-item { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">hyasmo</a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="instructional-design.html" class="active">Teaching</a></li>
+      <li><a href="work.html">Work</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+
+    <!-- HERO -->
+    <div class="hero">
+      <p class="hero-eyebrow">Instructional Design</p>
+      <h1 class="hero-title">Teaching <em>Philosophy</em><br>& Design Thinking</h1>
+      <div class="hero-statement">
+        "Good learning design is empathic, user-centered, and uncomplicated in its path to learning."
+      </div>
+    </div>
+
+    <!-- PHILOSOPHY -->
+    <div class="section reveal">
+      <p class="section-label">Philosophy</p>
+      <div class="philosophy-grid">
+        <div class="phil-block">
+          <div class="phil-label">Core Belief</div>
+          <div class="phil-title">Learning happens by <em>doing</em>, not by receiving.</div>
+          <div class="phil-body">Whether it's a K-12 student building a project or an employee applying a new workflow, the goal is always transfer — can they actually use this in the real world? The measure of good design is not what was taught but what changed.</div>
+        </div>
+        <div class="phil-block">
+          <div class="phil-label">Accessibility First</div>
+          <div class="phil-title">Design for the <em>most marginalized</em> learner first.</div>
+          <div class="phil-body">With deep experience in Title-1 districts and ESL contexts, accessibility is not an afterthought — it is the starting point. When you design for the learner with the most barriers, you design better for everyone. Differentiated instruction is not accommodation; it is good design.</div>
+        </div>
+        <div class="phil-block">
+          <div class="phil-label">K–12 Approach</div>
+          <div class="phil-title"><em>Project-based</em> learning, rooted in real context.</div>
+          <div class="phil-body">Students learn best when the work is meaningful and the stakes are real. Projects that connect to students' lives, communities, and futures create the conditions for genuine understanding — not just performance on an assessment.</div>
+        </div>
+        <div class="phil-block">
+          <div class="phil-label">Corporate Approach</div>
+          <div class="phil-title"><em>Performance-based</em> design, working backwards from outcomes.</div>
+          <div class="phil-body">In corporate contexts, every learning experience starts with a business outcome: what does someone need to do differently? Working backwards from that question ensures training is targeted, efficient, and measurable — reducing time-to-competency and maximizing ROI.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODELS -->
+    <div class="section reveal">
+      <p class="section-label">Design Models & Frameworks</p>
+      <div class="models-grid">
+        <div class="model-block">
+          <div class="model-name"><em>ADDIE</em></div>
+          <div class="model-full">Analyze · Design · Develop · Implement · Evaluate</div>
+          <div class="model-desc">The foundational ID framework. Used for structured course development across both K-12 and corporate contexts, ensuring each phase informs the next.</div>
+        </div>
+        <div class="model-block">
+          <div class="model-name"><em>SAM</em></div>
+          <div class="model-full">Successive Approximation Model</div>
+          <div class="model-desc">An agile alternative to ADDIE. Preferred for projects with evolving requirements or tight timelines — rapid prototyping with continuous feedback loops.</div>
+        </div>
+        <div class="model-block">
+          <div class="model-name"><em>Bloom's</em></div>
+          <div class="model-full">Bloom's Taxonomy</div>
+          <div class="model-desc">Used to write precise learning objectives and design assessments that match the intended cognitive level — from recall to creation.</div>
+        </div>
+        <div class="model-block">
+          <div class="model-name"><em>UDL</em></div>
+          <div class="model-full">Universal Design for Learning</div>
+          <div class="model-desc">Guides the design of flexible learning experiences with multiple means of representation, engagement, and expression — essential for diverse and ESL learner populations.</div>
+        </div>
+        <div class="model-block">
+          <div class="model-name"><em>TPACK</em></div>
+          <div class="model-full">Technological Pedagogical Content Knowledge</div>
+          <div class="model-desc">The framework for integrating technology thoughtfully — ensuring tools serve the pedagogy, not the other way around.</div>
+        </div>
+        <div class="model-block">
+          <div class="model-name"><em>Kirkpatrick</em></div>
+          <div class="model-full">Kirkpatrick Model of Evaluation</div>
+          <div class="model-desc">Used to evaluate training effectiveness at four levels: reaction, learning, behavior, and results. Essential for demonstrating ROI to corporate stakeholders.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAMPLES -->
+    <div class="section reveal">
+      <p class="section-label">Design Samples</p>
+      <div class="samples-grid">
+
+        <a href="teaching-with-ai-course.docx" class="sample-item">
+          <div>
+            <div class="sample-tags">
+              <span class="tag highlight">Micro-Course Outline</span>
+              <span class="tag">K–12</span>
+              <span class="tag">AI Literacy</span>
+              <span class="tag">ADDIE</span>
+            </div>
+            <div class="sample-title">Teaching with <em>AI</em></div>
+            <div class="sample-desc">A three-module micro-course for K–12 educators covering AI tool literacy, ethics in education, and pedagogy-first design. Includes learning objectives, lesson breakdowns, activities, the HEART framework, and Kirkpatrick evaluation strategy.</div>
+            <div class="sample-meta">3 modules · 9 lessons · ~4–6 hours · 0.5 CEU · Portfolio-based assessment</div>
+          </div>
+          <div class="sample-arrow">↓</div>
+        </a>
+
+        <a href="job-aid-ai-decision.html" class="sample-item" target="_blank">
+          <div>
+            <div class="sample-tags">
+              <span class="tag highlight">Job Aid</span>
+              <span class="tag">Decision Tree</span>
+              <span class="tag">K–12</span>
+              <span class="tag">Performance Support</span>
+            </div>
+            <div class="sample-title">Should I Use <em>AI</em> for This?</div>
+            <div class="sample-desc">A four-question decision guide for educators navigating AI tool adoption. Covers data privacy, student-facing review, assignment integrity, and transparency. Designed as a printable, scannable performance support tool.</div>
+            <div class="sample-meta">Single page · Print-ready · Ties to Teaching with AI course</div>
+          </div>
+          <div class="sample-arrow">→</div>
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-logo">hyasmo</div>
+    <div class="footer-contact">Hana Morsi · <a href="mailto:hanayasmine.m@gmail.com">hanayasmine.m@gmail.com</a></div>
+    <div class="footer-year">© 2026</div>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+    (function animRing() { rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); })();
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => { entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); obs.unobserve(e.target); } }); }, { threshold: 0.1 });
+    reveals.forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>

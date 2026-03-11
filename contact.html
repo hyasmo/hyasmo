@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact — hyasmo</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzNENkI0RiIvPgogIDx0ZXh0IHg9IjQiIHk9IjIyIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIj5oPC90ZXh0PgogIDx0ZXh0IHg9IjE4IiB5PSIxNCIgZm9udC1mYW1pbHk9InNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjQjhDREI4Ij7imIU8L3RleHQ+Cjwvc3ZnPg=="/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #3D6B4F; --green-light: #5A8C6E; --green-pale: #E4EDE3;
+      --lavender: #9B8EC4; --lavender-light: #B8AED8; --lavender-pale: #EDE9F8;
+      --paper: #F4F7F2; --paper-dark: #E4EDE3;
+      --ink: #141C14; --ink-muted: #5C7060; --sand: #B8CDB8;
+    }
+    body { background: var(--paper); color: var(--ink); font-family: 'DM Mono', monospace; font-weight: 300; cursor: none; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9000; opacity: 0.35; }
+    .cursor { position: fixed; width: 10px; height: 10px; background: var(--lavender); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s; mix-blend-mode: multiply; }
+    .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--lavender-light); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s; opacity: 0.5; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 24px 64px; background: var(--paper); border-bottom: 1px solid var(--green-pale); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 300; font-style: italic; letter-spacing: 0.15em; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--lavender); }
+    .nav-links a.active { color: var(--lavender); border-bottom: 1px solid var(--lavender); padding-bottom: 2px; }
+
+    .page {
+      flex: 1; padding-top: 80px;
+      display: flex; flex-direction: column; justify-content: center;
+      padding-left: 64px; padding-right: 64px;
+      padding-bottom: 80px;
+    }
+
+    .contact-eyebrow { font-size: 0.5rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--lavender); margin-bottom: 24px; opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards; }
+
+    .contact-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 300; line-height: 1;
+      color: var(--ink); margin-bottom: 40px;
+      opacity: 0; animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+    .contact-heading em { font-style: italic; color: var(--lavender); }
+
+    .contact-body {
+      font-size: 0.7rem; line-height: 1.9;
+      color: var(--ink-muted); max-width: 480px;
+      margin-bottom: 56px;
+      opacity: 0; animation: fadeUp 0.9s ease 0.7s forwards;
+    }
+
+    .contact-links {
+      display: flex; flex-direction: column; gap: 2px;
+      opacity: 0; animation: fadeUp 0.9s ease 0.9s forwards;
+    }
+
+    .contact-link {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 28px;
+      border: 1px solid var(--green-pale);
+      text-decoration: none;
+      transition: background 0.3s, border-color 0.3s;
+      max-width: 520px;
+    }
+    .contact-link:hover { background: var(--paper-dark); border-color: var(--lavender); }
+    .cl-label { font-size: 0.48rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--lavender); margin-bottom: 6px; }
+    .cl-value { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; color: var(--ink); }
+    .cl-arrow { font-size: 1rem; color: var(--lavender); transition: transform 0.2s; }
+    .contact-link:hover .cl-arrow { transform: translateX(4px); }
+
+    .availability {
+      margin-top: 48px; padding: 20px 28px;
+      background: var(--lavender-pale);
+      border-left: 3px solid var(--lavender);
+      max-width: 520px;
+      font-size: 0.62rem; line-height: 1.8;
+      color: var(--ink-muted);
+      opacity: 0; animation: fadeUp 0.9s ease 1.1s forwards;
+    }
+    .availability strong { color: var(--lavender); font-weight: 400; }
+
+    footer { padding: 36px 64px; border-top: 1px solid var(--green-pale); display: flex; justify-content: space-between; align-items: center; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-style: italic; color: var(--ink-muted); letter-spacing: 0.15em; }
+    .footer-year { font-size: 0.55rem; letter-spacing: 0.15em; color: var(--sand); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .page { padding-left: 24px; padding-right: 24px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">hyasmo</a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="instructional-design.html">Teaching</a></li>
+      <li><a href="work.html">Work</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+    <p class="contact-eyebrow">Contact</p>
+    <h1 class="contact-heading">Let's work<br><em>together.</em></h1>
+    <p class="contact-body">Available for full-time roles and consulting engagements in Learning Ops, AI Implementation, Instructional Design, and interactive media. Remote US + EU.</p>
+
+    <div class="contact-links">
+      <a href="mailto:hanayasmine.m@gmail.com" class="contact-link">
+        <div>
+          <div class="cl-label">Email</div>
+          <div class="cl-value">hanayasmine.m@gmail.com</div>
+        </div>
+        <div class="cl-arrow">→</div>
+      </a>
+      <a href="https://hyasmo.github.io" class="contact-link" target="_blank">
+        <div>
+          <div class="cl-label">Portfolio</div>
+          <div class="cl-value">hyasmo.github.io</div>
+        </div>
+        <div class="cl-arrow">→</div>
+      </a>
+    </div>
+
+    <div class="availability">
+      <strong>Currently based in Lisbon, PT.</strong> Open to remote positions across the US and EU, as well as hybrid roles in Lisbon. Available for contract, consulting, and full-time opportunities.
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">hyasmo</div>
+    <div class="footer-year">© 2026</div>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+    (function animRing() { rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); })();
+    document.querySelectorAll('a').forEach(el => {
+      el.addEventListener('mouseenter', () => { cursor.style.width = '18px'; cursor.style.height = '18px'; });
+      el.addEventListener('mouseleave', () => { cursor.style.width = '10px'; cursor.style.height = '10px'; });
+    });
+  </script>
+</body>
+</html>
