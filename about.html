@@ -9,108 +9,90 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --green: #3D6B4F; --green-light: #5A8C6E; --green-pale: #E4EDE3;
+      --green: #3D6B4F; --green-light: #5A8C6E; --green-pale: #E4EDE3; --green-mid: #C2D9C8;
       --lavender: #9B8EC4; --lavender-light: #B8AED8; --lavender-pale: #EDE9F8;
       --paper: #F4F7F2; --paper-dark: #E4EDE3;
-      --ink: #141C14; --ink-muted: #5C7060; --sand: #B8CDB8; --white: #FFFFFF;
+      --ink: #141C14; --ink-muted: #4A6050; --sand: #8EAA96; --white: #FFFFFF;
     }
-    body {
-      background: var(--paper); color: var(--ink);
-      font-family: 'DM Mono', monospace; font-weight: 300;
-      cursor: none; overflow-x: hidden;
-    }
-    body::before {
-      content: ''; position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 9000; opacity: 0.35;
-    }
-    .cursor { position: fixed; width: 10px; height: 10px; background: var(--lavender); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s; mix-blend-mode: multiply; }
-    .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--lavender-light); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s; opacity: 0.5; }
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 24px 64px; background: var(--paper); border-bottom: 1px solid var(--green-pale); }
-    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 300; font-style: italic; letter-spacing: 0.15em; color: var(--ink); text-decoration: none; }
-    .nav-links { display: flex; gap: 32px; list-style: none; }
-    .nav-links a { font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-muted); text-decoration: none; transition: color 0.2s; }
+    html { font-size: 16px; }
+    body { background: var(--paper); color: var(--ink); font-family: 'DM Mono', monospace; font-weight: 300; cursor: none; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9000; opacity: 0.35; }
+    .cursor { position: fixed; width: 10px; height: 10px; background: var(--lavender); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .2s, height .2s; mix-blend-mode: multiply; }
+    .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--lavender-light); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); opacity: .5; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 20px 56px; background: var(--paper); border-bottom: 1px solid var(--green-pale); }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 300; font-style: italic; letter-spacing: .12em; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { font-size: .9rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-muted); text-decoration: none; transition: color .2s; }
     .nav-links a:hover, .nav-links a.active { color: var(--lavender); }
     .nav-links a.active { border-bottom: 1px solid var(--lavender); padding-bottom: 2px; }
 
-    .page { padding-top: 80px; }
+    .page { padding-top: 72px; }
 
     /* HERO */
-    .hero {
-      padding: 80px 64px 64px;
-      border-bottom: 1px solid var(--green-pale);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: end;
-    }
-    .hero-eyebrow { font-size: 0.5rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--lavender); margin-bottom: 20px; }
-    .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3rem, 6vw, 5.5rem);
-      font-weight: 300; line-height: 1; color: var(--ink);
-    }
+    .hero { padding: 72px 56px 64px; border-bottom: 1px solid var(--green-pale); display: grid; grid-template-columns: 1fr 1.2fr; gap: 72px; align-items: start; }
+    .hero-eyebrow { font-size: .85rem; letter-spacing: .22em; text-transform: uppercase; color: var(--lavender); margin-bottom: 16px; }
+    .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.8rem, 5.5vw, 5rem); font-weight: 300; line-height: 1; color: var(--ink); }
     .hero-title em { font-style: italic; color: var(--lavender); }
-    .hero-intro { font-size: 0.72rem; line-height: 1.9; color: var(--ink-muted); }
-    .hero-intro p { margin-bottom: 16px; }
+
+    /* STAT ROW */
+    .stat-row { display: flex; gap: 2px; margin-top: 28px; }
+    .stat { padding: 16px 20px; background: var(--paper-dark); flex: 1; }
+    .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--green); line-height: 1; }
+    .stat-label { font-size: .8rem; color: var(--ink-muted); margin-top: 4px; line-height: 1.4; }
+
+    .hero-intro { padding-top: 8px; }
+    .hero-intro p { font-size: 1rem; line-height: 1.85; color: var(--ink-muted); margin-bottom: 20px; }
     .hero-intro p:last-child { margin-bottom: 0; }
+    .hero-intro b { color: var(--ink); font-weight: 400; }
+
+    /* SECTIONS */
+    .section { padding: 64px 56px; border-bottom: 1px solid var(--green-pale); }
+    .section-label { font-size: .85rem; letter-spacing: .2em; text-transform: uppercase; color: var(--lavender); margin-bottom: 40px; display: flex; align-items: center; gap: 16px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--green-mid); max-width: 60px; }
 
     /* EXPERIENCE */
-    .section { padding: 72px 64px; border-bottom: 1px solid var(--green-pale); max-width: 100%; }
-    .section-label { font-size: 0.5rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--lavender); margin-bottom: 48px; display: flex; align-items: center; gap: 16px; }
-    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--sand); max-width: 80px; }
-
-    .exp-grid { display: flex; flex-direction: column; gap: 0; }
-    .exp-item {
-      display: grid; grid-template-columns: 180px 1fr;
-      gap: 40px; padding: 32px 0;
-      border-bottom: 1px solid var(--green-pale);
-    }
+    .exp-item { display: grid; grid-template-columns: 160px 1fr; gap: 40px; padding: 32px 0; border-bottom: 1px solid var(--green-pale); }
     .exp-item:last-child { border-bottom: none; }
-    .exp-date { font-size: 0.55rem; letter-spacing: 0.1em; color: var(--sand); padding-top: 4px; line-height: 1.8; }
-    .exp-role { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-bottom: 4px; }
-    .exp-org { font-size: 0.58rem; letter-spacing: 0.1em; color: var(--lavender); text-transform: uppercase; margin-bottom: 12px; }
-    .exp-desc { font-size: 0.65rem; line-height: 1.8; color: var(--ink-muted); }
+    .exp-date { font-size: .85rem; color: var(--sand); line-height: 1.6; padding-top: 3px; }
+    .exp-role { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 400; color: var(--ink); margin-bottom: 4px; }
+    .exp-org { font-size: .875rem; letter-spacing: .06em; color: var(--lavender); text-transform: uppercase; margin-bottom: 12px; }
+    .exp-desc { font-size: .9375rem; line-height: 1.8; color: var(--ink-muted); }
 
     /* EDUCATION */
     .edu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
     .edu-item { padding: 28px 24px; background: var(--paper-dark); }
-    .edu-degree { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 400; color: var(--ink); margin-bottom: 6px; line-height: 1.3; }
-    .edu-school { font-size: 0.58rem; letter-spacing: 0.1em; color: var(--lavender); text-transform: uppercase; margin-bottom: 4px; }
-    .edu-year { font-size: 0.55rem; color: var(--sand); }
+    .edu-degree { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; color: var(--ink); margin-bottom: 8px; line-height: 1.4; }
+    .edu-school { font-size: .875rem; letter-spacing: .05em; color: var(--lavender); text-transform: uppercase; margin-bottom: 4px; }
+    .edu-year { font-size: .85rem; color: var(--sand); }
 
     /* TOOLS */
     .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
     .tool-category { padding: 28px 24px; }
     .tool-category:nth-child(odd) { background: var(--paper-dark); }
-    .tool-cat-label { font-size: 0.48rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--lavender); margin-bottom: 16px; }
-    .tool-list { display: flex; flex-wrap: wrap; gap: 6px; }
-    .tool-tag {
-      font-size: 0.52rem; letter-spacing: 0.08em;
-      color: var(--ink-muted); border: 1px solid var(--sand);
-      padding: 4px 10px;
-      transition: border-color 0.2s, color 0.2s;
-    }
+    .tool-cat-label { font-size: .8rem; letter-spacing: .18em; text-transform: uppercase; color: var(--lavender); margin-bottom: 16px; }
+    .tool-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tool-tag { font-size: .875rem; color: var(--ink-muted); border: 1px solid var(--green-mid); padding: 5px 12px; transition: border-color .2s, color .2s; }
     .tool-tag:hover { border-color: var(--lavender); color: var(--lavender); }
     .tool-tag.star { border-color: var(--green); color: var(--green); }
 
-    /* REVEAL */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    footer { padding: 36px 64px; border-top: 1px solid var(--green-pale); display: flex; justify-content: space-between; align-items: center; }
-    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-style: italic; color: var(--ink-muted); letter-spacing: 0.15em; }
-    .footer-contact { font-size: 0.55rem; color: var(--ink-muted); }
+    footer { padding: 28px 56px; border-top: 1px solid var(--green-pale); display: flex; justify-content: space-between; align-items: center; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-style: italic; color: var(--ink-muted); letter-spacing: .12em; }
+    .footer-contact { font-size: .875rem; color: var(--ink-muted); }
     .footer-contact a { color: var(--ink-muted); text-decoration: none; border-bottom: 1px solid var(--sand); }
-    .footer-year { font-size: 0.55rem; letter-spacing: 0.15em; color: var(--sand); }
+    .footer-year { font-size: .85rem; color: var(--sand); }
 
     @media (max-width: 768px) {
-      nav { padding: 20px 24px; }
-      .hero { grid-template-columns: 1fr; padding: 60px 24px; gap: 32px; }
+      nav { padding: 18px 24px; }
+      .hero { grid-template-columns: 1fr; padding: 56px 24px 40px; gap: 32px; }
       .section { padding: 48px 24px; }
       .exp-item { grid-template-columns: 1fr; gap: 8px; }
       .edu-grid, .tools-grid { grid-template-columns: 1fr; }
-      footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 24px; }
+      .stat-row { flex-wrap: wrap; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
     }
   </style>
 </head>
@@ -130,54 +112,55 @@
 
   <div class="page">
 
-    <!-- HERO -->
     <div class="hero">
       <div>
         <p class="hero-eyebrow">About</p>
         <h1 class="hero-title">Hana<br><em>Morsi</em></h1>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-num">8+</div><div class="stat-label">Years in tech education & learning ops</div></div>
+          <div class="stat"><div class="stat-num">K–12</div><div class="stat-label">to enterprise learning programs</div></div>
+          <div class="stat"><div class="stat-num">AI</div><div class="stat-label">tools implementation & curriculum</div></div>
+        </div>
       </div>
       <div class="hero-intro">
-        <p>Hana Morsi is a Learning Ops and AI Implementation Specialist with 8+ years leading technical programs across K–12 education and enterprise contexts. She has taught Computer Science, AI, Cybersecurity, and Web Development — including three years as Technical Program Coordinator in a Title-1 district — and currently delivers virtual CS and Engineering instruction nationally through Elevate K-12.</p>
-        <p>On the industry side, she consults on AI instructional projects, builds SCORM-compliant modules in Articulate 360, and manages LMS integration for enterprise clients. Currently completing a Master's in AI + Creative Computing at IADE University (2026–27), with a focus on ethical AI adoption and human-centered implementation.</p>
-        <p>Under the studio name hyasmo, she makes work that sits at the edge of systems and story — tools that teach, installations that ask questions, and interfaces that carry meaning.</p>
+        <p>I'm a Learning Ops and AI Implementation Specialist who builds programs that work — <b>curricula that stick, systems that scale, and tools that actually get used.</b> My background spans Title-1 K–12 districts, national virtual instruction, and enterprise consulting.</p>
+        <p>Currently completing a <b>Master's in AI + Creative Computing at IADE University</b> (Lisbon, 2026–27), with a focus on ethical AI adoption and human-centered implementation. Available for remote contract and full-time roles across the US and EU.</p>
       </div>
     </div>
 
     <!-- EXPERIENCE -->
     <div class="section reveal">
       <p class="section-label">Experience</p>
-      <div class="exp-grid">
-        <div class="exp-item">
-          <div class="exp-date">2025 — Present</div>
-          <div>
-            <div class="exp-role">Project & Learning Operations Consultant</div>
-            <div class="exp-org">Freelance</div>
-            <div class="exp-desc">Execute end-to-end technical programs aligned with corporate KPIs. Manage technical lifecycles for AI instructional projects, overseeing LMS integration and ensuring 100% data privacy compliance. Develop SCORM-compliant modules in Articulate 360. Analyze program data to refine operational workflows, achieving a 30% increase in measurable performance outcomes.</div>
-          </div>
+      <div class="exp-item">
+        <div class="exp-date">2025 — Present</div>
+        <div>
+          <div class="exp-role">Project & Learning Operations Consultant</div>
+          <div class="exp-org">Freelance</div>
+          <div class="exp-desc">Consulting on AI instructional design projects, SCORM-compliant module development in Articulate 360, and LMS integration for enterprise clients. Building automated learning workflows and advising on AI tool adoption strategies for education and corporate L&D teams.</div>
         </div>
-        <div class="exp-item">
-          <div class="exp-date">2022 — Present</div>
-          <div>
-            <div class="exp-role">Computer Science + Engineering Instructor</div>
-            <div class="exp-org">Elevate K-12</div>
-            <div class="exp-desc">Direct virtual program delivery for a national client base. Deliver engaging learning experiences in Artificial Intelligence, Cybersecurity, and Web Development aligned with standards and differentiated learning strategies. Partner with regional administrators to track progress and deliver individualized technical support strategies.</div>
-          </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-date">2022 — Present</div>
+        <div>
+          <div class="exp-role">Computer Science + Engineering Instructor</div>
+          <div class="exp-org">Elevate K-12</div>
+          <div class="exp-desc">Delivering virtual instruction nationally in AI, Cybersecurity, and Web Development. Differentiating for diverse learner populations, partnering with school administrators on progress tracking, and providing individualized technical support strategies at scale.</div>
         </div>
-        <div class="exp-item">
-          <div class="exp-date">2019 — 2021</div>
-          <div>
-            <div class="exp-role">Technical Program Coordinator</div>
-            <div class="exp-org">Gililand Middle School · Title-1 District</div>
-            <div class="exp-desc">Managed a 3-year technical curriculum rollout in a Title-1 setting, delivering instruction in Web Development, SQL, Python, and Cybersecurity. Optimized resource allocation for diverse learner groups. Spearheaded staff professional development as lead SME for collaborative technology tools. Built and deployed interactive digital modules using Articulate 360.</div>
-          </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-date">2019 — 2021</div>
+        <div>
+          <div class="exp-role">Technical Program Coordinator</div>
+          <div class="exp-org">Gililand Middle School · Title-1 District</div>
+          <div class="exp-desc">Managed a 3-year technical curriculum rollout serving under-resourced learners. Delivered instruction in Web Development, SQL, Python, and Cybersecurity. Led staff professional development as SME for collaborative technology tools. Built and deployed interactive digital modules in Articulate 360.</div>
         </div>
-        <div class="exp-item">
-          <div class="exp-date">2017 — 2018</div>
-          <div>
-            <div class="exp-role">Digital Outreach & Project Specialist</div>
-            <div class="exp-org">Rutgers University Center</div>
-            <div class="exp-desc">Orchestrated the "SpeakUp" campaign's digital footprint, managing social media operations via Hootsuite. Increased student engagement through targeted digital branding and cross-departmental collaboration.</div>
-          </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-date">2017 — 2018</div>
+        <div>
+          <div class="exp-role">Digital Outreach & Project Specialist</div>
+          <div class="exp-org">Rutgers University Center</div>
+          <div class="exp-desc">Managed the SpeakUp campaign's digital presence and social media operations. Increased student engagement through targeted digital strategy and cross-departmental collaboration.</div>
         </div>
       </div>
     </div>
@@ -187,18 +170,18 @@
       <p class="section-label">Education & Certifications</p>
       <div class="edu-grid">
         <div class="edu-item">
-          <div class="edu-degree">Master's of AI + Creative Computing</div>
-          <div class="edu-school">IADE University</div>
+          <div class="edu-degree">Master's in AI + Creative Computing</div>
+          <div class="edu-school">IADE University, Lisbon</div>
           <div class="edu-year">2026 — 2027</div>
         </div>
         <div class="edu-item">
-          <div class="edu-degree">Bachelor of Information Technology and Informatics</div>
-          <div class="edu-school">Rutgers University New Brunswick</div>
+          <div class="edu-degree">Bachelor of Information Technology & Informatics</div>
+          <div class="edu-school">Rutgers University</div>
           <div class="edu-year">2014 — 2018</div>
         </div>
         <div class="edu-item">
           <div class="edu-degree">Certified Subject Matter Expert in Computer Science</div>
-          <div class="edu-school">Arizona Department of Education</div>
+          <div class="edu-school">Arizona Dept. of Education</div>
           <div class="edu-year">2022 — 2032</div>
         </div>
       </div>
@@ -226,8 +209,8 @@
             <span class="tool-tag">Rise</span>
             <span class="tool-tag">SCORM</span>
             <span class="tool-tag">Moodle</span>
-            <span class="tool-tag">Blackboard</span>
             <span class="tool-tag">Canvas LMS</span>
+            <span class="tool-tag">Blackboard</span>
             <span class="tool-tag">Google Classroom</span>
           </div>
         </div>
@@ -287,12 +270,12 @@
   <script>
     const cursor = document.getElementById('cursor');
     const ring = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
-    (function animRing() { rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); })();
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+    (function animRing(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
     const reveals = document.querySelectorAll('.reveal');
-    const obs = new IntersectionObserver(entries => { entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); obs.unobserve(e.target); } }); }, { threshold: 0.1 });
-    reveals.forEach(el => obs.observe(el));
+    const obs = new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);obs.unobserve(e.target);}});},{threshold:.1});
+    reveals.forEach(el=>obs.observe(el));
   </script>
 </body>
 </html>
