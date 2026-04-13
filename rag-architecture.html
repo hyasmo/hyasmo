@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG System Architecture: Production Deployment Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      font-size: 16px;
+      line-height: 1.7;
+      color: #141C14;
+      background-color: #F4F7F2;
+      background-image: 
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 4px);
+      position: relative;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(244, 247, 242, 0.98);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(61, 107, 79, 0.1);
+      padding: 1rem 2rem;
+      z-index: 1000;
+    }
+
+    nav a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      text-decoration: none;
+      color: #3D6B4F;
+      transition: color 0.3s;
+      letter-spacing: 0.5px;
+    }
+
+    nav a:hover {
+      color: #5A8C6E;
+    }
+
+    /* Main content */
+    main {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 140px 2rem 4rem;
+    }
+
+    /* Header */
+    header {
+      margin-bottom: 3rem;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 300;
+      line-height: 1.2;
+      color: #141C14;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      font-style: italic;
+      color: #4A6050;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    .meta {
+      font-size: 0.85rem;
+      color: #8EAA96;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2rem;
+    }
+
+    /* Article sections */
+    section {
+      margin-bottom: 3rem;
+      animation: fadeInUp 0.8s ease-out forwards;
+      opacity: 0;
+    }
+
+    section:nth-child(2) { animation-delay: 0.1s; }
+    section:nth-child(3) { animation-delay: 0.2s; }
+    section:nth-child(4) { animation-delay: 0.3s; }
+    section:nth-child(5) { animation-delay: 0.4s; }
+    section:nth-child(6) { animation-delay: 0.5s; }
+    section:nth-child(7) { animation-delay: 0.6s; }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: #3D6B4F;
+      margin-bottom: 1.5rem;
+      margin-top: 2rem;
+      letter-spacing: -0.3px;
+      border-bottom: 2px solid #E4EDE3;
+      padding-bottom: 0.8rem;
+    }
+
+    h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: #5A8C6E;
+      margin-top: 1.5rem;
+      margin-bottom: 0.8rem;
+      letter-spacing: -0.2px;
+    }
+
+    p {
+      margin-bottom: 1.2rem;
+      color: #4A6050;
+      font-weight: 300;
+    }
+
+    /* Component blocks */
+    .component-block {
+      background: white;
+      border-left: 4px solid #3D6B4F;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0;
+    }
+
+    .component-block h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #3D6B4F;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.3px;
+    }
+
+    .component-block p {
+      font-size: 0.95rem;
+      color: #4A6050;
+      margin-bottom: 0.6rem;
+    }
+
+    .component-block p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Best practices callout */
+    .callout {
+      background: #EDE9F8;
+      border-left: 4px solid #9B8EC4;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0;
+    }
+
+    .callout h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #7B6EA8;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.3px;
+    }
+
+    .callout p {
+      font-size: 0.95rem;
+      color: #5B5278;
+    }
+
+    /* Code-style inline elements */
+    code {
+      font-family: 'DM Mono', monospace;
+      background: #E4EDE3;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.9rem;
+      color: #3D6B4F;
+    }
+
+    strong {
+      font-weight: 500;
+      color: #141C14;
+    }
+
+    em {
+      font-style: italic;
+      color: #5A8C6E;
+    }
+
+    /* Lists */
+    ul, ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    li {
+      margin-bottom: 0.8rem;
+      color: #4A6050;
+      font-weight: 300;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid #C2D9C8;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #8EAA96;
+    }
+
+    footer a {
+      color: #3D6B4F;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #5A8C6E;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      main {
+        padding: 120px 1.5rem 2rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+
+      nav {
+        padding: 0.8rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="https://hyasmo.github.io">← back to portfolio</a>
+  </nav>
+
+  <main>
+    <header>
+      <h1>RAG System Architecture</h1>
+      <p class="subtitle">A production deployment guide</p>
+      <div class="meta">Written for Graphite • Technical Writing</div>
+    </header>
+
+    <section>
+      <p>RAG system architecture for deployment at scale – how it works in production from data sources and vector databases to failure modes, and best practices.</p>
+      
+      <p>A RAG prototype is built to prove a concept – then production breaks it. Queries become unpredictable, the corpus goes stale, and confidential chunks surface to unauthorized users. Creating a RAG system architecture that holds up to production means making deliberate decisions at every layer, from how you chunk documents to how you store and search vectors. Here's a breakdown of how to make the right decisions for your team.</p>
+    </section>
+
+    <section>
+      <h2>What is RAG architecture?</h2>
+      
+      <p><strong>Retrieval Augmented Generation (RAG)</strong> is a system that retrieves relevant information and feeds it to the LLM at query time, rather than relying on what the model already knows. Every architectural decision that follows – how data is ingested, how it's embedded, and how it's retrieved – determines latency, accuracy, and security at scale.</p>
+    </section>
+
+    <section>
+      <h2>RAG system architecture components</h2>
+      
+      <h3>Data sources</h3>
+      <p>Data sources are the foundation of any strong RAG architectural system. Ensuring data sources remain contextually relevant and accurate comes down to two decisions: <strong>how often to ingest data</strong> and <strong>how to chunk it</strong>.</p>
+
+      <div class="component-block">
+        <h4>Data ingestion</h4>
+        <p><strong>Batch ingestion</strong> is simpler but leaves corpus stale between runs – streaming ingestion indexes documents as they change but requires more complex infrastructure.</p>
+      </div>
+
+      <div class="component-block">
+        <h4>Chunking strategy</h4>
+        <p><strong>Semantic chunking</strong> splits along natural boundaries like paragraph breaks, producing the most coherent chunks but at the cost of complexity. <strong>Fixed-size chunking</strong> splits documents at a set character or token count – simple to implement but prone to cutting sentences mid-thought and losing context.</p>
+      </div>
+
+      <h3>Embedding models</h3>
+      <p>Embedding models convert the user query into a high dimensional vector representation. This vector is then matched against a vector database, so the system can search by semantic similarity rather than keywords.</p>
+      
+      <p>The core trade-off is between <strong>open source models</strong> like sentence-transformers, and <strong>API-based models</strong> like OpenAI's text-embedding-3-small, which perform better but add cost and latency. The risk: you're locked-in – your entire vector database is built on one model's understanding of meaning.</p>
+
+      <h3>Vector database</h3>
+      <p>Vector databases store embeddings and retrieve them by similarity rather than exact match. The right choice depends on your retrieval pattern and operational context.</p>
+
+      <div class="component-block">
+        <h4>Pinecone</h4>
+        <p>Fully managed and simple to get running but adds cost and vendor lock-in.</p>
+      </div>
+
+      <div class="component-block">
+        <h4>pgvector</h4>
+        <p>Lives inside PostgreSQL, is cost efficient and easy to integrate for teams already running Postgres – though performance degrades at very large scale without careful tuning.</p>
+      </div>
+
+      <div class="component-block">
+        <h4>Weaviate</h4>
+        <p>Open-source, supports hybrid search and handles complex retrieval – requires more operational overhead since you're running it yourself.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Challenges in RAG system architecture deployment</h2>
+      
+      <h3>Retrieval degradation</h3>
+      <p>Happens when the corpus goes stale due to <strong>embedding drift</strong> – when vectors in your database become misaligned with your evolving corpus over time.</p>
+      
+      <p><strong>How to mitigate:</strong> Optimize your vector database with efficient document indexing and domain-specific embedding models for better precision. Periodic re-embedding and regularly pruning outdated or duplicate data keeps the database fresh and responses accurate.</p>
+
+      <h3>Security and access control</h3>
+      <p>These are critical failure points of RAG in LLM systems. Many vulnerabilities exist. To secure RAG you must build security into each layer.</p>
+      
+      <div class="callout">
+        <h4>Security checklist</h4>
+        <ul>
+          <li>Authentication check</li>
+          <li>Document access control</li>
+          <li>Secure retrieval</li>
+          <li>Output filtering</li>
+        </ul>
+      </div>
+
+      <h3>Context window limitations</h3>
+      <p>LLMs can only process so much text at once. Naive top-k retrieval floods the prompt with marginally relevant chunks, diluting the signal and degrading answer quality.</p>
+      
+      <p><strong>The solution:</strong> <strong>Reranking</strong> solves this by adding a second pass after initial retrieval that scores chunks by actual relevance, so only the best ones make it to the prompt.</p>
+    </section>
+
+    <section>
+      <h2>Best practices for RAG deployment</h2>
+      
+      <p>Creating a robust, production-ready RAG system architecture requires both technical precision and intentional workflow design. Here are some strategies to avoid pain-points in your RAG architecture.</p>
+
+      <h3>Decouple retrieval from generation</h3>
+      <p>Tightly coupled pipelines are fragile – one change turns into failures across the whole system. Keeping retrieval and generation as separate components means you can upgrade your LLM, swap your vector database, or tune your retrieval logic without breaking everything else.</p>
+
+      <h3>Treat evaluation as a first-class system component</h3>
+      <p>Don't add evaluation at the end – build it in from the start. Frameworks like <code>RAGAS</code> measure retrieval precision, answer faithfulness, and context relevance independently. Without it, when something breaks it's harder to pinpoint what needs to be fixed – and users notice before you do.</p>
+
+      <h3>Design for embedding model replaceability from day one</h3>
+      <p>A vector database is only as strong as the model that built it. Build your system so it's not hardwired to one specific embedding model, and tag every stored vector with the model that created it – that way when a better model comes along, you can swap it out gradually instead of rebuilding everything all at once.</p>
+    </section>
+
+    <section>
+      <h2>From prototype to production</h2>
+      
+      <p>RAG system architecture is a powerful tool for teams that need their AI systems to stay accurate, current, and secure. But it is only as strong as the decisions made at each layer – how data is ingested and chunked, which embedding model you choose and how replaceable you've made it, and which vector database fits your retrieval pattern.</p>
+
+      <p>The gap between a prototype and a production system isn't complexity for its own sake. It's <em>intentionality</em> – knowing why each component is built the way it is, and what breaks when it isn't.</p>
+    </section>
+
+    <footer>
+      <p>RAG System Architecture: A Production Deployment Guide</p>
+      <p><a href="https://hyasmo.github.io">hyasmo.github.io</a></p>
+    </footer>
+  </main>
+</body>
+</html>
